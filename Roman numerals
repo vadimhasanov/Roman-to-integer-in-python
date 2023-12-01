@@ -1,0 +1,51 @@
+def roman_to_int(roman):
+    roman_dict = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+    total = 0
+    prev_value = 0
+
+    for numeral in reversed(roman):
+        value = roman_dict[numeral]
+
+        if value < prev_value:
+            total -= value
+        else:
+            total += value
+
+        prev_value = value
+
+    return total
+
+def validate_roman(roman):
+    valid_chars = {'I', 'V', 'X', 'L', 'C', 'D', 'M'}
+
+    # səhv rəqəm yoxlanışı
+    if any(char not in valid_chars for char in roman):
+        return False
+
+    # Dörddən çox təkrar yoxlanışı
+    for char in valid_chars:
+        if roman.count(char * 5) > 0 or roman.count(char * 10) > 0:
+            return False
+
+    # Səhv geri bildiriş (IVX, XC, ...)
+    invalid_combinations = ['IV', 'IX', 'XL', 'XC', 'CD', 'CM']
+    if any(combination in roman for combination in invalid_combinations):
+        return False
+
+    return True
+
+def main():
+    while True:
+        roman_input = input("Zəhmət olmasa rum rəqəmi daxil edin: (Çıxış üçün 'q' düyməsinə basın.): ").upper()
+
+        if roman_input == 'Q':
+            break
+
+        if validate_roman(roman_input):
+            arabic_result = roman_to_int(roman_input)
+            print(f"{roman_input} Rum rəqəmi {arabic_result} Ərəb rəqəmi olaraq çevrildi.")
+        else:
+            print("Səhv yazılmış rum rəqəmi! Zəhmət olmasa düzgün daxil edin.")
+
+if __name__ == "__main__":
+    main()
